@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Audio;
 using UnityEngine;
-
-public class AudioManager : MonoBehaviour {
+public class AudioController : MonoBehaviour {
 
     public Sound[] sounds;
+    public bool isMute;
 
-    public static AudioManager instance;
+    public static AudioController instance;
 
     private void Awake()
     {
@@ -36,22 +36,32 @@ public class AudioManager : MonoBehaviour {
 
     void Start()
     {
+        isMute = false;
         Play("MusicAmbient");
     }
 
     public void Play(string name)
     {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
+        if(!isMute)
         {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
+            Sound s = Array.Find(sounds, sound => sound.name == name);
+            if (s == null)
+            {
+                Debug.LogWarning("Sound: " + name + " not found!");
+                return;
+            }
+            if (s.source == null)
+            {
+                Debug.LogWarning("Audio source for: " + name + " not found!");
+                return;
+            }
+            s.source.Play();
         }
-        if (s.source == null)
-        {
-            Debug.LogWarning("Audio source for: " + name + " not found!");
-            return;
-        }
-        s.source.Play();
     }
+
+    public void switchVolumeOnOf()
+    {
+        isMute = !isMute;
+    }
+
 }

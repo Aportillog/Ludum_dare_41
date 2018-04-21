@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
     private float clickRate;
     private float clickCounterTime = 0.5f;
     private int height;
+    private int currentHealth;
 
     private Vector2 lastPosition;
     public Vector2 initialPos;
@@ -15,12 +16,14 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed = 2f;
     public float minSpeed = 0.5f;
     public  GameObject player;
+    public int initialHealth = 1;
 
     
 	// Use this for initialization
 	void Start () {
         transform.position = initialPos;
         lastPosition = transform.position;
+        currentHealth = initialHealth;
 
         clickCounter = 0;
         clickRate = 0;
@@ -49,24 +52,40 @@ public class PlayerController : MonoBehaviour {
 
     private void changeSpeed()
     {
-        Debug.Log("ClickRate: " + clickRate);
-        if(clickRate<3)
+        if (clickRate < 2)
         {
             currentSpeed = 0.5f;
         }
-        else if((clickRate>3) && (clickRate<5))
+        else if ((clickRate >= 2) && (clickRate < 4))
         {
             currentSpeed = 0.7f;
         }
-        else if((clickRate >= 5) && (clickRate < 7))
+        else if ((clickRate >= 4) && (clickRate < 5))
         {
-            currentSpeed = 1.3f;
+            currentSpeed = 1f;
         }
-        else if (clickRate >= 7)
+        else if ((clickRate >= 5) && (clickRate < 6))
+        {
+            currentSpeed = 1.5f;
+        }
+        else if ((clickRate >= 6) && (clickRate < 7))
         {
             currentSpeed = 2f;
         }
+        else if ((clickRate >= 7) && (clickRate < 8))
+        {
+            currentSpeed = 7f;
+        }
+        else if (clickRate >= 8)
+        {
+            currentSpeed = 10f;
+        }
 
+    }
+
+    public int getCurrentHealth()
+    {
+        return currentHealth;
     }
 
     private void countClicks()
