@@ -6,14 +6,22 @@ public class PlayerController : MonoBehaviour {
     private int clickCounter;
     private float clickRate;
     private float clickCounterTime = 0.5f;
+    private int height;
+
+    private Vector2 lastPosition;
+    public Vector2 initialPos;
 
     public float currentSpeed = 0.5f;
     public float maxSpeed = 2f;
     public float minSpeed = 0.5f;
     public  GameObject player;
 
+    
 	// Use this for initialization
 	void Start () {
+        transform.position = initialPos;
+        lastPosition = transform.position;
+
         clickCounter = 0;
         clickRate = 0;
         
@@ -23,24 +31,25 @@ public class PlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        //Add a click to the count
-        countClicks();
-
         movePlayer();
     }
     void Update () {
         //Change speed depending on the click rate
         changeSpeed();
-	}
+        //Add a click to the count
+        countClicks();
+    }
 
     private void movePlayer()
     {
         player.GetComponent<Rigidbody2D>().velocity = new Vector2(0, currentSpeed);
+        height += Mathf.RoundToInt(Vector2.Distance(transform.position, lastPosition) * 100);
+        lastPosition = transform.position;
     }
 
     private void changeSpeed()
     {
-        //Debug.Log("ClickRate: " + clickRate);
+        Debug.Log("ClickRate: " + clickRate);
         if(clickRate<3)
         {
             currentSpeed = 0.5f;
@@ -80,6 +89,16 @@ public class PlayerController : MonoBehaviour {
             //Debug.Log("Click Rate: " + clickRate);
 
         }
+    }
+
+    public Vector2 getInitialPos()
+    {
+        return initialPos;
+    }
+
+    public int getHeight()
+    {
+        return height;
     }
 
 }
