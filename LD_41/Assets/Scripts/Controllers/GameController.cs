@@ -6,15 +6,15 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
+    //Player variables
     private Vector2 playerInitPos;
     private PlayerController pjCtrlScript;
+    public GameObject player;
 
     public static GameController instance;
-    public GameObject player;
     public Text heightValueTxt;
-    public GameObject enemySpawner;
 
-
+    //
     private float restartTime;
     public float startWait;
     public float spawnWait;
@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour {
     public float spawnLimit_y_min;
     public int spawnLimit_x_right;
     public int spawnLimit_x_left;
+    public GameObject enemySpawner;
 
     [SerializeField]
     public GameObject[] spawnableObjects; //All the spawnable objects referenced at unity

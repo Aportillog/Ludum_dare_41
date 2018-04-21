@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TargetFollower : MonoBehaviour {
+public class CameraController : MonoBehaviour {
 
     private Vector3 targetPos;
     private Vector3 lastOffset;

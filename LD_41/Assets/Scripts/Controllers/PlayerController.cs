@@ -12,10 +12,8 @@ public class PlayerController : MonoBehaviour {
     private Vector2 lastPosition;
     public Vector2 initialPos;
 
-    public float currentSpeed = 0.5f;
-    public float maxSpeed = 2f;
-    public float minSpeed = 0.5f;
-    public  GameObject player;
+    private float currentSpeed = 0.5f;
+    public float acceleration = 1.5f;
     public int initialHealth = 1;
 
     
@@ -25,8 +23,9 @@ public class PlayerController : MonoBehaviour {
         lastPosition = transform.position;
         currentHealth = initialHealth;
 
-        clickCounter = 0;
-        clickRate = 0;
+        //Always start moving
+        clickCounter = 1;
+        clickRate = 1;
         
         //Start the click counter
         StartCoroutine(calculateClickRate(clickCounterTime));
@@ -45,41 +44,16 @@ public class PlayerController : MonoBehaviour {
 
     private void movePlayer()
     {
-        player.GetComponent<Rigidbody2D>().velocity = new Vector2(0, currentSpeed);
+        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, currentSpeed);
         height += Mathf.RoundToInt(Vector2.Distance(transform.position, lastPosition) * 100);
         lastPosition = transform.position;
     }
 
     private void changeSpeed()
     {
-        if (clickRate < 2)
-        {
-            currentSpeed = 0.5f;
-        }
-        else if ((clickRate >= 2) && (clickRate < 4))
-        {
-            currentSpeed = 0.7f;
-        }
-        else if ((clickRate >= 4) && (clickRate < 5))
-        {
-            currentSpeed = 1f;
-        }
-        else if ((clickRate >= 5) && (clickRate < 6))
-        {
-            currentSpeed = 1.5f;
-        }
-        else if ((clickRate >= 6) && (clickRate < 7))
-        {
-            currentSpeed = 2f;
-        }
-        else if ((clickRate >= 7) && (clickRate < 8))
-        {
-            currentSpeed = 7f;
-        }
-        else if (clickRate >= 8)
-        {
-            currentSpeed = 10f;
-        }
+        //Relate currentSpeed with clickRate linearly y=mx+n //y=currentSpeed, x=clickRate, m=0.3, n=1
+        //currentSpeed = clickRate * 0.3f + 1;
+        currentSpeed = clickRate * 0.3f * acceleration;
 
     }
 
@@ -101,7 +75,7 @@ public class PlayerController : MonoBehaviour {
         while (true)
         {
             //Restart click counter
-            clickCounter = 0;
+            clickCounter = 1;
             yield return new WaitForSeconds(time);
 
             clickRate = clickCounter / time;
