@@ -43,7 +43,10 @@ public class GameController : MonoBehaviour {
     public float scrollingSpeed = 0.5f;
 
     //Gameplay variables
-    public bool isGameOver = false;
+    private bool isGameOver = false;
+    public bool isPaused = false;
+    public float easinessRate = 7f;
+    public int level;
 
     //Scene variables
     private string sceneLoaded;
@@ -107,8 +110,6 @@ public class GameController : MonoBehaviour {
         spawnXValues[0] = spawnLimit_x_right;
         spawnXValues[1] = spawnLimit_x_left;
 
-        //setupMainLevel();
-
     }
 
     private void Update()
@@ -116,6 +117,7 @@ public class GameController : MonoBehaviour {
         if(sceneLoaded == "Main")
         {
             updateScore();
+            setLevel();
         }
     }
 
@@ -125,6 +127,13 @@ public class GameController : MonoBehaviour {
         heightScore = pjCtrlScript.getHeight();
         //Show updated score
         heightValueTxt.text = heightScore.ToString() + " m";
+    }
+
+    private void setLevel()
+    {
+        level = Mathf.RoundToInt(heightScore/1000) + 1;
+        //level = (heightScore / 1000) + 1;
+        spawnWait = easinessRate/level;
     }
 
     public void setScore(int score)
@@ -165,7 +174,6 @@ public class GameController : MonoBehaviour {
             //Give a velocity to the clone
             clone.GetComponent<Rigidbody2D>().velocity = new Vector2(-spawnXValues[randXIndex], 0);
 
-
             yield return new WaitForSeconds(spawnWait);
         }
     }
@@ -178,6 +186,7 @@ public class GameController : MonoBehaviour {
         //Game variables
         heightScore = 0;
         isGameOver = false;
+        level = 0;
         //Player
         player = GameObject.FindGameObjectWithTag("Player");
         pjCtrlScript = player.GetComponent<PlayerController>();
