@@ -11,6 +11,7 @@ public class MenuController : MonoBehaviour {
     public Button muteGame_btn;
 
     private AudioController m_AudioController;
+    private Animator muteBtnAnimtr;
 
     private void Start()
     {
@@ -22,6 +23,8 @@ public class MenuController : MonoBehaviour {
         btnStrt.onClick.AddListener(startGame);
         btnQut.onClick.AddListener(quitGame);
         btnMute.onClick.AddListener(muteGame);
+
+        muteBtnAnimtr = muteGame_btn.GetComponent<Animator>();
 
     }
     public void startGame()
@@ -37,6 +40,8 @@ public class MenuController : MonoBehaviour {
 
     public void muteGame()
     {
+        bool soundStatus = muteBtnAnimtr.GetBool("isMuted");
+        muteBtnAnimtr.SetBool("isMuted", !soundStatus);
         m_AudioController.muteGame();
     }
 }

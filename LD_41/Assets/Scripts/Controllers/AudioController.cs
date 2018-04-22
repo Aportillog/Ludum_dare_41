@@ -53,14 +53,14 @@ public class AudioController : MonoBehaviour {
     {
         //sceneLoaded = scene.name;
 
+        stopAllSounds();
+
         if (scene.name == "Main")
         {
-            Stop("MenuMusic");
             Play("MainMusic");
         }
         else if (scene.name == "Menu")
         {
-            Stop("MainMusic");
             Play("MenuMusic");
         }
     }
@@ -81,6 +81,14 @@ public class AudioController : MonoBehaviour {
     private void Stop(string name)
     {
         findSource(name).source.Stop();
+    }
+
+    private void stopAllSounds()
+    {
+        foreach (Sound s in sounds)
+        {
+            s.source.Stop();
+        }
     }
 
     private void toogleMuteAllSounds()

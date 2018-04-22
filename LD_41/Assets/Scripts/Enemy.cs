@@ -6,12 +6,12 @@ public class Enemy : MonoBehaviour {
     public float rotationOffset = 50f;
     public bool rotationFlag = true;
     public bool destroyDelayed = true;
+    public float rotationSpeed = 1f;
     Vector3 randRotation;
 
     // Use this for initialization
     void Start () {
 
-        CalculateRotation();
         if (destroyDelayed)
         {
             Destroy(this.gameObject, 3f);
@@ -26,19 +26,11 @@ public class Enemy : MonoBehaviour {
 
     }
 
-    void CalculateRotation()
-    {
-        randRotation.x = Random.Range(-rotationOffset, rotationOffset);
-        randRotation.y = Random.Range(-rotationOffset, rotationOffset);
-        randRotation.z = 0;
-    }
-
     void EnemyRotation()
     {
         if (rotationFlag)
         {
-            //transform.Rotate(randRotation * Time.deltaTime);
-            transform.Rotate(Vector3.forward * -90 * Time.deltaTime);
+            transform.Rotate(Vector3.forward * -90 * Time.deltaTime * rotationSpeed);
         }
 
     }
