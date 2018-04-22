@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class GameController : MonoBehaviour {
 
@@ -17,6 +18,7 @@ public class GameController : MonoBehaviour {
     //Time variables
     private float restartTime;
     public float startWait;
+    public float gameOverWait;
     public float spawnWait;
     public float restartGameDelay = 5f;
 
@@ -75,9 +77,8 @@ public class GameController : MonoBehaviour {
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Level Loaded");
-        Debug.Log(scene.name);
-        Debug.Log(mode);
+        Debug.Log("Level Loaded: " + scene.name);
+        //Debug.Log(mode);
 
         sceneLoaded = scene.name;
 
@@ -106,14 +107,16 @@ public class GameController : MonoBehaviour {
         spawnXValues[0] = spawnLimit_x_right;
         spawnXValues[1] = spawnLimit_x_left;
 
-        setupMainLevel();
+        //setupMainLevel();
 
     }
 
     private void Update()
     {
-        updateScore();
-        gameOver();
+        if(sceneLoaded == "Main")
+        {
+            updateScore();
+        }
     }
 
     private void updateScore()
@@ -124,18 +127,21 @@ public class GameController : MonoBehaviour {
         heightValueTxt.text = heightScore.ToString() + " m";
     }
 
-    public void setGameOver()
+    public void setScore(int score)
     {
-        //TODO: Make a corutine for waiting
-        isGameOver = true;
+        this.heightScore = score;
     }
 
-    private void gameOver()
+    public void setGameOver()
     {
-        if (isGameOver)
-        {
-            SceneManager.LoadScene("Menu", LoadSceneMode.Single);
-        }
+        isGameOver = true;
+        StartCoroutine(gameOver());
+    }
+
+    IEnumerator gameOver()
+    {
+        yield return new WaitForSeconds(startWait);
+        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
     IEnumerator SpawnEnemies()
@@ -147,13 +153,13 @@ public class GameController : MonoBehaviour {
             //Add offset calculated from enemySpawner
             float offset = enemySpawner.transform.position.y;
             //This x spawn limit should be always const
-            int randXIndex = Random.Range(0, spawnXValues.Length);
-            Vector2 spawnPosition = new Vector2(spawnXValues[randXIndex], Random.Range(spawnLimit_y_max + offset, spawnLimit_y_min + offset));
+            int randXIndex = UnityEngine.Random.Range(0, spawnXValues.Length);
+            Vector2 spawnPosition = new Vector2(spawnXValues[randXIndex], UnityEngine.Random.Range(spawnLimit_y_max + offset, spawnLimit_y_min + offset));
             Quaternion spawnRotation = Quaternion.identity;
 
 
             //Try to get the object from the dictionary
-            GameObject temp = spawnObjectsDic[Random.Range(0, spawnObjectsDic.Count)];
+            GameObject temp = spawnObjectsDic[UnityEngine.Random.Range(0, spawnObjectsDic.Count)];
             GameObject clone = (GameObject)Instantiate(temp, spawnPosition, Quaternion.identity);
 
             //Give a velocity to the clone
@@ -168,6 +174,7 @@ public class GameController : MonoBehaviour {
     {
         //Score (height)
         heightValueTxt = GameObject.Find("Height_value").GetComponent<Text>();
+
         //Game variables
         heightScore = 0;
         isGameOver = false;
@@ -180,6 +187,11 @@ public class GameController : MonoBehaviour {
 
         //Start spawning enemies
         StartCoroutine(SpawnEnemies());
+    }
+
+    IEnumerator waitSeconds(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
     }
 
 }

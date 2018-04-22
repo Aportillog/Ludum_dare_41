@@ -16,17 +16,17 @@ public class PlayerController : MonoBehaviour {
     public Vector2 initialPos;
     private float currentSpeed = 0.5f;
     public float acceleration = 1.5f;
-    private int currentHealth;
-    public int initialHealth = 1;
     public bool isInmortal = false;
+
+    private Animator animator;
 
 
     // Use this for initialization
     void Start () {
-        //Sestup player
+        //Setup player
         transform.position = initialPos;
         lastPosition = transform.position;
-        currentHealth = initialHealth;
+        animator = GetComponent<Animator>();
 
         //Always start moving
         clickCounter = 1;
@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour {
     private void movePlayer()
     {
         this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, currentSpeed);
+        //Current traveled distance
         height += Mathf.RoundToInt(Vector2.Distance(transform.position, lastPosition) * 100);
         lastPosition = transform.position;
     }
@@ -62,9 +63,9 @@ public class PlayerController : MonoBehaviour {
 
     }
 
-    public int getCurrentHealth()
+    public int getHeight()
     {
-        return currentHealth;
+        return height;
     }
 
     private void countClicks()
@@ -100,16 +101,11 @@ public class PlayerController : MonoBehaviour {
         return initialPos;
     }
 
-    public int getHeight()
-    {
-        return height;
-    }
-
     private void killPlayer()
     {
         if(!isInmortal)
         {
-            currentHealth=0;
+            animator.SetTrigger("playerDeath");
             GameController.instance.setGameOver();
         }
     }

@@ -37,6 +37,6 @@ public class MenuController : MonoBehaviour {
 
     public void muteGame()
     {
-        m_AudioController.switchVolumeOnOf();
+        m_AudioController.muteGame();
     }
 }

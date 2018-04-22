@@ -4,7 +4,6 @@ using System.Collections;
 public class TargetFollower : MonoBehaviour {
 
     private Vector3 targetPos;
-    private Vector3 lastOffset;
 
     public GameObject target;
     public float interpVelocity;
@@ -12,7 +11,6 @@ public class TargetFollower : MonoBehaviour {
     private void Start()
     {
         targetPos = this.transform.position;
-        lastOffset = offset;
     }
 
     private void FixedUpdate()

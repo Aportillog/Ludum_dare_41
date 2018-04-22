@@ -9,10 +9,12 @@ public class CameraController : MonoBehaviour {
     public GameObject target;
     public float interpVelocity;
     public Vector3 offset;
+
+    public float tMod = 0.25f;
+
     private void Start()
     {
         targetPos = this.transform.position;
-        lastOffset = offset;
     }
 
     private void FixedUpdate()

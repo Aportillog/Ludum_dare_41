@@ -78,14 +78,23 @@ public class AudioController : MonoBehaviour {
         }
     }
 
-    public void Stop(string name)
+    private void Stop(string name)
     {
         findSource(name).source.Stop();
     }
 
-    public void switchVolumeOnOf()
+    private void toogleMuteAllSounds()
+    {
+        foreach (Sound s in sounds)
+        {
+            s.source.mute = !s.source.mute;
+        }
+    }
+
+    public void muteGame()
     {
         isMute = !isMute;
+        toogleMuteAllSounds();
     }
 
     private Sound findSource(string name)
