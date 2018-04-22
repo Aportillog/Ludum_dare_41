@@ -3,22 +3,26 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
+    //Clicker variables
     private int clickCounter;
     private float clickRate;
     private float clickCounterTime = 0.5f;
-    private int height;
-    private int currentHealth;
 
+    //Game Variables
+    private int height;
+
+    //Player variables
     private Vector2 lastPosition;
     public Vector2 initialPos;
-
     private float currentSpeed = 0.5f;
     public float acceleration = 1.5f;
+    private int currentHealth;
     public int initialHealth = 1;
 
-    
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
+        //Sestup player
         transform.position = initialPos;
         lastPosition = transform.position;
         currentHealth = initialHealth;
@@ -79,9 +83,13 @@ public class PlayerController : MonoBehaviour {
             yield return new WaitForSeconds(time);
 
             clickRate = clickCounter / time;
-            //Debug.Log("Click Rate: " + clickRate);
-
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        currentHealth--;
+        Debug.Log("Triggered!!");
     }
 
     public Vector2 getInitialPos()

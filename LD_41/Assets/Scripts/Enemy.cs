@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour {
         CalculateRotation();
         if (destroyDelayed)
         {
-            Destroy(this.gameObject, 5f);
+            Destroy(this.gameObject, 3f);
         }
 
     }

@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour {
     //Player variables
     private Vector2 playerInitPos;
     private PlayerController pjCtrlScript;
-    public GameObject player;
+    private GameObject player;
     
 
     //Time variables
@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour {
 
     //UI variables
     public int heightScore;
-    public Text heightValueTxt;
+    private Text heightValueTxt;
 
     //Settings variables
     public float scrollingSpeed = 0.5f;
@@ -55,6 +55,31 @@ public class GameController : MonoBehaviour {
 
         //Make GameController inmortal
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    // called first
+    void OnEnable()
+    {
+        //Tell our 'OnLevelFinishedLoading' function to start listening for a scene change as soon as this script is enabled.
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    void OnDisable()
+    {
+        //Tell our 'OnLevelFinishedLoading' function to stop listening for a scene change as soon as this script is disabled. Remember to always have an unsubscription for every delegate you subscribe to!
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+    }
+
+    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Level Loaded");
+        Debug.Log(scene.name);
+        Debug.Log(mode);
+
+        if(scene.name == "Main")
+        {
+            setupMainLevel();
+        }
     }
 
     private void Start()
@@ -95,20 +120,28 @@ public class GameController : MonoBehaviour {
         //Get player height
         heightScore = pjCtrlScript.getHeight();
         //Show updated score
-        heightValueTxt.text = heightScore.ToString();
+        heightValueTxt.text = heightScore.ToString() + " m";
+    }
+
+    private void checkGameOver()
+    {
+        if (pjCtrlScript.getCurrentHealth() <= 0)
+        {
+            restartTime += Time.deltaTime;
+            if (restartTime > restartGameDelay)
+            {
+                isGameOver = true;
+            }
+
+        }
     }
 
     private void gameOver()
     {
-        if (pjCtrlScript.getCurrentHealth() <= 0)
+        checkGameOver();
+        if (isGameOver)
         {
-            isGameOver = true;
-            restartTime += Time.deltaTime;
-            if (restartTime > restartGameDelay)
-            {
-                SceneManager.LoadScene("Menu", LoadSceneMode.Single);
-            }
-
+            SceneManager.LoadScene("Menu", LoadSceneMode.Single);
         }
     }
 
@@ -136,6 +169,14 @@ public class GameController : MonoBehaviour {
 
             yield return new WaitForSeconds(spawnWait);
         }
+    }
+
+    private void setupMainLevel()
+    {
+        //Score txt (height)
+        heightValueTxt = GameObject.Find("Height_value").GetComponent<Text>();
+        //Player
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
 }
