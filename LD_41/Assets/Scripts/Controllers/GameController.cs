@@ -6,15 +6,15 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
+    public static GameController instance;
+
     //Player variables
     private Vector2 playerInitPos;
     private PlayerController pjCtrlScript;
     public GameObject player;
+    
 
-    public static GameController instance;
-    public Text heightValueTxt;
-
-    //
+    //Time variables
     private float restartTime;
     public float startWait;
     public float spawnWait;
@@ -28,11 +28,20 @@ public class GameController : MonoBehaviour {
     public int spawnLimit_x_left;
     public GameObject enemySpawner;
 
+    //Spawnable objects
     [SerializeField]
     public GameObject[] spawnableObjects; //All the spawnable objects referenced at unity
     private Dictionary<int, GameObject> spawnObjectsDic; //Dictionary with all spawnable objects
 
+    //UI variables
     public int heightScore;
+    public Text heightValueTxt;
+
+    //Settings variables
+    public float scrollingSpeed = 0.5f;
+
+    //Gameplay variables
+    public bool isGameOver = false;
 
     private void Awake()
     {
@@ -51,6 +60,7 @@ public class GameController : MonoBehaviour {
     private void Start()
     {
         heightScore = 0;
+        isGameOver = false;
 
         //Player variables
         pjCtrlScript = player.GetComponent<PlayerController>();
@@ -92,6 +102,7 @@ public class GameController : MonoBehaviour {
     {
         if (pjCtrlScript.getCurrentHealth() <= 0)
         {
+            isGameOver = true;
             restartTime += Time.deltaTime;
             if (restartTime > restartGameDelay)
             {

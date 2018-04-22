@@ -20,8 +20,8 @@ public class MenuController : MonoBehaviour {
         Button btnMute = muteGame_btn.GetComponent<Button>();
 
         btnStrt.onClick.AddListener(startGame);
-        btnQut.onClick.AddListener(startGame);
-        btnMute.onClick.AddListener(startGame);
+        btnQut.onClick.AddListener(quitGame);
+        btnMute.onClick.AddListener(muteGame);
 
     }
     public void startGame()
