@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour {
     public float acceleration = 1.5f;
     private int currentHealth;
     public int initialHealth = 1;
+    public bool isInmortal = false;
 
 
     // Use this for initialization
@@ -88,8 +89,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        currentHealth--;
-        Debug.Log("Triggered!!");
+        damagePlayer();
     }
 
     public Vector2 getInitialPos()
@@ -100,6 +100,14 @@ public class PlayerController : MonoBehaviour {
     public int getHeight()
     {
         return height;
+    }
+
+    private void damagePlayer()
+    {
+        if(!isInmortal)
+        {
+            currentHealth--;
+        }
     }
 
 }
