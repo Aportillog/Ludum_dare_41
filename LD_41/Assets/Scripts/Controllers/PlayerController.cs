@@ -89,7 +89,10 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        damagePlayer();
+        if (collision.GetComponent<Collider2D>().tag == "Enemy")
+        {
+            killPlayer();
+        }
     }
 
     public Vector2 getInitialPos()
@@ -102,11 +105,12 @@ public class PlayerController : MonoBehaviour {
         return height;
     }
 
-    private void damagePlayer()
+    private void killPlayer()
     {
         if(!isInmortal)
         {
-            currentHealth--;
+            currentHealth=0;
+            GameController.instance.setGameOver();
         }
     }
 

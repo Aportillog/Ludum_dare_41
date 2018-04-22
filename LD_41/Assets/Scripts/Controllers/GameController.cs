@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
     public float spawnLimit_y_min;
     public int spawnLimit_x_right;
     public int spawnLimit_x_left;
-    public GameObject enemySpawner;
+    private GameObject enemySpawner;
 
     //Spawnable objects
     [SerializeField]
@@ -42,6 +42,9 @@ public class GameController : MonoBehaviour {
 
     //Gameplay variables
     public bool isGameOver = false;
+
+    //Scene variables
+    private string sceneLoaded;
 
     private void Awake()
     {
@@ -76,7 +79,12 @@ public class GameController : MonoBehaviour {
         Debug.Log(scene.name);
         Debug.Log(mode);
 
-        if(scene.name == "Main")
+        sceneLoaded = scene.name;
+
+        //Restart game variables
+        isGameOver = false;
+
+        if (scene.name == "Main")
         {
             setupMainLevel();
         }
@@ -84,12 +92,6 @@ public class GameController : MonoBehaviour {
 
     private void Start()
     {
-        heightScore = 0;
-        isGameOver = false;
-
-        //Player variables
-        pjCtrlScript = player.GetComponent<PlayerController>();
-        playerInitPos = pjCtrlScript.getInitialPos();
 
         //Dictionary code for managing spawnable objects
         //Add all objects to a dictionary to instantly spawn the desired object, without looping every time the player builds something
@@ -104,8 +106,7 @@ public class GameController : MonoBehaviour {
         spawnXValues[0] = spawnLimit_x_right;
         spawnXValues[1] = spawnLimit_x_left;
 
-        //Start spawning enemies
-        StartCoroutine(SpawnEnemies());
+        setupMainLevel();
 
     }
 
@@ -123,22 +124,14 @@ public class GameController : MonoBehaviour {
         heightValueTxt.text = heightScore.ToString() + " m";
     }
 
-    private void checkGameOver()
+    public void setGameOver()
     {
-        if (pjCtrlScript.getCurrentHealth() <= 0)
-        {
-            restartTime += Time.deltaTime;
-            if (restartTime > restartGameDelay)
-            {
-                isGameOver = true;
-            }
-
-        }
+        //TODO: Make a corutine for waiting
+        isGameOver = true;
     }
 
     private void gameOver()
     {
-        checkGameOver();
         if (isGameOver)
         {
             SceneManager.LoadScene("Menu", LoadSceneMode.Single);
@@ -149,7 +142,7 @@ public class GameController : MonoBehaviour {
     {
         yield return new WaitForSeconds(startWait);
 
-        while (true)
+        while (sceneLoaded == "Main")
         {
             //Add offset calculated from enemySpawner
             float offset = enemySpawner.transform.position.y;
@@ -173,10 +166,20 @@ public class GameController : MonoBehaviour {
 
     private void setupMainLevel()
     {
-        //Score txt (height)
+        //Score (height)
         heightValueTxt = GameObject.Find("Height_value").GetComponent<Text>();
+        //Game variables
+        heightScore = 0;
+        isGameOver = false;
         //Player
         player = GameObject.FindGameObjectWithTag("Player");
+        pjCtrlScript = player.GetComponent<PlayerController>();
+        playerInitPos = pjCtrlScript.getInitialPos();
+        //EnemySpawner
+        enemySpawner = GameObject.FindGameObjectWithTag("EnemySpawner");
+
+        //Start spawning enemies
+        StartCoroutine(SpawnEnemies());
     }
 
 }
