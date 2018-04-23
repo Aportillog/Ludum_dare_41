@@ -30,7 +30,7 @@ public class MenuController : MonoBehaviour {
     public void startGame()
     {
         //On hit Play button
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("IntroCutScene");
     }
     public void quitGame()
     {

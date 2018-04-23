@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour {
     //Clicker variables
     private int clickCounter;
     private float clickRate;
-    private float clickCounterTime = 0.5f;
+    private float clickCounterTime = 0.3f;
 
     //Game Variables
     private int height;
@@ -20,6 +20,11 @@ public class PlayerController : MonoBehaviour {
 
     private Animator animator;
 
+
+	[SerializeField]
+	float maxY,minY;
+	[SerializeField]
+	float gravity = -3.0f;
 
     // Use this for initialization
     void Start () {
@@ -41,6 +46,11 @@ public class PlayerController : MonoBehaviour {
         movePlayer();
     }
     void Update () {
+		if (transform.position.y >= maxY)
+			transform.position = new Vector3(transform.position.x,maxY,transform.position.z);
+
+		if (transform.position.y <= minY)
+			transform.position = new Vector3(transform.position.x,minY,transform.position.z);
         //Change speed depending on the click rate
         changeSpeed();
         //Add a click to the count
@@ -49,7 +59,7 @@ public class PlayerController : MonoBehaviour {
 
     private void movePlayer()
     {
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, currentSpeed);
+		this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, gravity+currentSpeed);
         //Current traveled distance
         height += Mathf.RoundToInt(Vector2.Distance(transform.position, lastPosition) * 100);
         lastPosition = transform.position;
@@ -83,7 +93,6 @@ public class PlayerController : MonoBehaviour {
             //Restart click counter
             clickCounter = 1;
             yield return new WaitForSeconds(time);
-
             clickRate = clickCounter / time;
         }
     }
@@ -109,5 +118,6 @@ public class PlayerController : MonoBehaviour {
             GameController.instance.setGameOver();
         }
     }
+
 
 }

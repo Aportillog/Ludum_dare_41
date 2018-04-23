@@ -63,6 +63,10 @@ public class AudioController : MonoBehaviour {
         {
             Play("MenuMusic");
         }
+        else if (scene.name == "IntroCutScene")
+        {
+            Play("CutSceneMusic");
+        }
     }
 
     void Start()
