@@ -11,6 +11,8 @@ public class CutScene : MonoBehaviour {
 	[SerializeField]
 	float timeToChangeSprite;
 
+    private bool skip = false;
+
 	// Use this for initialization
 	void Start () {
 		Invoke ("ChangeSprite",timeToChangeSprite);
@@ -18,7 +20,11 @@ public class CutScene : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if (Input.GetMouseButtonDown(0))
+        {
+            skip = true;
+            LoadGameplayLevel();
+        }
 	}
 
 	void ChangeSprite()
@@ -26,7 +32,10 @@ public class CutScene : MonoBehaviour {
 		sprite1.SetActive (false);
 		sprite2.SetActive (true);
         AudioController.instance.Play("Canon");
-		Invoke ("LoadGameplayLevel", timeToChangeSprite);
+        if (!skip)
+        {
+            Invoke("LoadGameplayLevel", timeToChangeSprite);
+        }
 	}
 
 	void LoadGameplayLevel()

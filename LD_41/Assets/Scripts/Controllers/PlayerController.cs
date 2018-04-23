@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour {
     private int height;
 
     //Player variables
-    private Vector2 lastPosition;
+    private Vector3 lastPosition;
     public Vector2 initialPos;
     private float currentSpeed = 0.5f;
     public float acceleration = 1.5f;
@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour {
 
 		if (transform.position.y <= minY)
 			transform.position = new Vector3(transform.position.x,minY,transform.position.z);
+        //Change player acceleration depending on direction
+        changeGravity();
         //Change speed depending on the click rate
         changeSpeed();
         //Add a click to the count
@@ -59,9 +61,19 @@ public class PlayerController : MonoBehaviour {
 
     private void movePlayer()
     {
-		this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, gravity+currentSpeed);
+		this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, gravity + currentSpeed);
+
         //Current traveled distance
-        height += Mathf.RoundToInt(Vector2.Distance(transform.position, lastPosition) * 100);
+        Vector3 direction = getDirection();
+        if(direction.y > 0)
+        {
+            height += Mathf.RoundToInt(Vector2.Distance(transform.position, lastPosition) * 10);
+        }
+        else
+        {
+            height += (2 * Mathf.RoundToInt(clickRate));
+        }
+        
         lastPosition = transform.position;
     }
 
@@ -71,6 +83,28 @@ public class PlayerController : MonoBehaviour {
         //currentSpeed = clickRate * 0.3f + 1;
         currentSpeed = clickRate * 0.3f * acceleration;
 
+    }
+    private void changeGravity()
+    {
+        if ((clickRate>4) && (clickRate < 6))
+        {
+            //acceleration = 1.7f;
+            gravity = 0.7f;
+        }
+        else if(clickRate >= 6)
+        {
+            gravity = 1.2f;
+        }
+        else
+        {
+            //acceleration = 0.1f;
+            gravity = -4;
+        }
+    }
+
+    private Vector3 getDirection()
+    {
+        return (transform.position - lastPosition).normalized;
     }
 
     public int getHeight()
@@ -114,6 +148,8 @@ public class PlayerController : MonoBehaviour {
     {
         if(!isInmortal)
         {
+            GameObject.Find("Flames").GetComponent<ParticleSystem>().Stop();
+            GameObject.Find("Smoke").GetComponent<ParticleSystem>().Stop();
             animator.SetTrigger("playerDeath");
             GameController.instance.setGameOver();
         }

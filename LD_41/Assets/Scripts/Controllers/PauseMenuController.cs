@@ -10,14 +10,15 @@ public class PauseMenuController : MonoBehaviour
     private bool isPaused;
 
     private Animator muteBtnAnimtr;
-    public Button muteGame_btn;
+
+    public GameObject m_muteGame_btn;
 
     public GameObject pauseMenuCanvas;
 
     private void Awake()
     {
         isPaused = false;
-        //muteBtnAnimtr = muteGame_btn.GetComponent<Animator>();
+        muteBtnAnimtr = m_muteGame_btn.GetComponent<Animator>();
     }
     // Update is called once per frame
     void Update()
@@ -55,8 +56,8 @@ public class PauseMenuController : MonoBehaviour
 
     public void muteGame()
     {
-        //bool soundStatus = muteBtnAnimtr.GetBool("isMuted");
-        //muteBtnAnimtr.SetBool("isMuted", !soundStatus);
+        bool soundStatus = muteBtnAnimtr.GetBool("isMuted");
+        muteBtnAnimtr.SetBool("isMuted", !soundStatus);
         AudioController.instance.muteGame();
     }
 }
